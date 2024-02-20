@@ -30,23 +30,30 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 
   let runButton = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left
+    vscode.StatusBarAlignment.Right
   );
-  runButton.text = "$(triangle-right) Run";
+  runButton.text = "$(triangle-right) Run Java By Aswin";
   runButton.command = "extension.runJava";
   runButton.tooltip = "Run Java";
 
   context.subscriptions.push(runButton);
+  runButton.show();
 
+  // on change active text editor
   vscode.window.onDidChangeActiveTextEditor((editor) => {
     if (editor) {
+      console.log('onDidChangeActiveTextEditor | ', editor.document.uri);
       const { fsPath } = editor.document.uri;
       const fileExtension = path.extname(fsPath);
-      runButton.color = fileExtension === ".java" ? undefined : "transparent";
+      if(fileExtension === ".java") {
+        vscode.window.showInformationMessage("Java file, no need to worry, Run Java By Aswin is here to help you! 🚀");
+        runButton.show();
+      } else {
+        runButton.hide();
+      }
     }
   });
-
-  runButton.show();
 }
 
-export function deactivate() {}
+
+
